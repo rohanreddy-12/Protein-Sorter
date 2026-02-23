@@ -1,4 +1,6 @@
+[![Netlify Status](https://img.shields.io/badge/Netlify-Deployed-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://protein-sorter.netlify.app/)
 
+**🚀 [Live Demo: Try the Protein Sorter Here!](https://protein-sorter.netlify.app/)**
 # Protein Sorter 🥚
 
 Protein Sorter is a lightweight, interactive web application that allows users to input various food items and visually sorts them based on their protein content per 100g. 
