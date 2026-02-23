@@ -48,4 +48,3 @@ Protein Sorter
 ```
 
 
-Deployed Link:https://protein-sorter.netlify.app/
