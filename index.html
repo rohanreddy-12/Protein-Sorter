@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Protein Sorter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6a82fb;
+      --secondary: #fc5c7d;
+      --bg: #f4f7fa;
+      --card-bg: #fff;
+      --text: #2d3a4b;
+      --shadow: 0 8px 32px rgba(31, 38, 135, 0.12);
+      --border-radius: 22px;
+    }
+    [data-theme="dark"] {
+      --bg: #23272f;
+      --card-bg: #2d313a;
+      --text: #f4f7fa;
+      --shadow: 0 8px 32px rgba(31, 38, 135, 0.32);
+    }
+    html, body {
+      background: var(--bg);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    .container {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 40px 32px 32px 32px;
+      max-width: 540px;
+      width: 95vw;
+      margin: 40px auto 24px auto;
+      text-align: center;
+      position: relative;
+    }
+    .logo {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 10px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 12px #6a82fb33;
+      font-size: 2.2em;
+      color: #fff;
+      font-weight: bold;
+      user-select: none;
+    }
+    h1 {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+      font-size: 2.1em;
+    }
+    .subtitle {
+      color: var(--secondary);
+      font-size: 1.1em;
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+    .instructions {
+      font-size: 1em;
+      color: #888;
+      margin-bottom: 18px;
+    }
+    .input-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    #food-input {
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1.5px solid #b0b8c1;
+      font-size: 1.1em;
+      width: 60%;
+      outline: none;
+      transition: border 0.2s;
+      background: var(--bg);
+      color: var(--text);
+    }
+    #food-input:focus {
+      border: 1.5px solid var(--primary);
+    }
+    button {
+      padding: 12px 28px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      color: #fff;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(108, 99, 255, 0.08);
+      transition: background 0.2s, transform 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, var(--secondary) 0%, var(--primary) 100%);
+      transform: translateY(-2px) scale(1.04);
+    }
+    .error {
+      color: #e74c3c;
+      font-size: 1em;
+      margin-bottom: 10px;
+      min-height: 22px;
+    }
+    #icons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 28px;
+      margin: 32px 0 10px 0;
+      min-height: 120px;
+    }
+    .food-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--bg);
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(108, 99, 255, 0.08);
+      padding: 18px 16px 10px 16px;
+      min-width: 110px;
+      min-height: 120px;
+      transition: transform 0.7s cubic-bezier(.68,-0.55,.27,1.55), box-shadow 0.3s;
+      will-change: transform;
+      perspective: 600px;
+      position: relative;
+      cursor: pointer;
+    }
+    .food-item.animated {
+      transform: rotateY(360deg) scale(1.15);
+      box-shadow: 0 8px 32px rgba(108, 99, 255, 0.18);
+    }
+    .food-label {
+      margin-top: 10px;
+      font-size: 1.08em;
+      color: var(--text);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card-bg);
+      color: var(--text);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(108, 99, 255, 0.12);
+      padding: 8px 14px;
+      font-size: 0.98em;
+      margin-top: 8px;
+      z-index: 10;
+      white-space: nowrap;
+    }
+    .food-item:focus .tooltip,
+    .food-item:hover .tooltip {
+      display: block;
+    }
+    img {
+      width: 60px;
+      filter: drop-shadow(0 2px 8px #6a82fb33);
+      transition: filter 0.3s;
+    }
+    #sorted-list {
+      margin-top: 30px;
+      font-size: 1.15em;
+      color: var(--primary);
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: none;
+      border: none;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: var(--primary);
+      transition: color 0.2s;
+    }
+    .theme-toggle:hover {
+      color: var(--secondary);
+    }
+    footer {
+      text-align: center;
+      color: #888;
+      font-size: 0.98em;
+      margin-bottom: 18px;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 18px 4vw; }
+      #icons { gap: 14px; }
+      .food-item { min-width: 80px; min-height: 100px; padding: 10px 6px 6px 6px; }
+      img { width: 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" aria-label="Protein Sorter App">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    <div class="logo" aria-label="Protein Logo">🥚</div>
+    <h1>Protein Sorter</h1>
+    <div class="subtitle">Sort your foods by protein content</div>
+    <div class="instructions">Enter food items (comma separated) and click <b>Sort by Protein</b>.</div>
+    <form class="input-row" id="food-form" autocomplete="off" onsubmit="return false;">
+      <input id="food-input" type="text" placeholder="e.g. egg, chicken, tofu" aria-label="Food items">
+      <button type="submit">Sort by Protein</button>
+    </form>
+    <div class="error" id="error-msg"></div>
+    <div id="icons" aria-live="polite"></div>
+    <div id="sorted-list"></div>
+  </div>
+  <footer>
+    &copy; 2024 Protein Sorter &mdash; Powered by HTML, CSS, JS
+  </footer>
+  <script src="protein-sorter.js"></script>
+</body>
+</html> 
